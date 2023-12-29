@@ -1,7 +1,6 @@
 package states;
 
 import backend.WeekData;
-import backend.Achievements;
 
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
@@ -12,7 +11,6 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.input.keyboard.FlxKey;
 import lime.app.Application;
 
-import objects.AchievementPopup;
 import states.editors.MasterEditorMenu;
 import options.OptionsState;
 import openfl.Lib;
@@ -25,7 +23,6 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	public var camGame:FlxCamera;
 	public var camHUD:FlxCamera;
-	public var camAchievement:FlxCamera;
 	var optionTween:Array<FlxTween> = [];
 	var cameraTween:Array<FlxTween> = [];
 	
@@ -71,10 +68,6 @@ class MainMenuState extends MusicBeatState
         Mainbpm = TitleState.bpm;
         bpm = TitleState.bpm;
         
-		#if MODS_ALLOWED
-		Mods.pushGlobalMods();
-		#end
-		Mods.loadTopMod();
 
 		#if desktop
 		// Updating Discord Rich Presence
@@ -212,17 +205,6 @@ class MainMenuState extends MusicBeatState
         versionShit.cameras = [camHUD];
 		// NG.core.calls.event.logEvent('swag').send();
 
-		
-        
-		#if ACHIEVEMENTS_ALLOWED
-		Achievements.loadAchievements();
-		var leDate = Date.now();
-		if (leDate.getDay() == 5 && leDate.getHours() >= 18) {
-			var achieveID:Int = Achievements.getAchievementIndex('friday_night_play');
-			if(!Achievements.isAchievementUnlocked(Achievements.achievementsStuff[achieveID][2])) { //It's a friday night. WEEEEEEEEEEEEEEEEEE
-				Achievements.achievementsMap.set(Achievements.achievementsStuff[achieveID][2], true);
-				giveAchievement();
-				ClientPrefs.saveSettings();
 			}
 		}
 		#end
@@ -241,18 +223,6 @@ class MainMenuState extends MusicBeatState
 		super.create();
 		CustomFadeTransition.nextCamera = camHUD;
 	}
-
-    
-	#if ACHIEVEMENTS_ALLOWED
-	// Unlocks "Freaky on a Friday Night" achievement
-	function giveAchievement() {
-		add(new AchievementObject('friday_night_play', camAchievement));
-		FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
-		trace('Giving achievement "friday_night_play"');
-	}
-	#end
-    
-    
 	
 	var canClick:Bool = true;
 	var canBeat:Bool = true;
@@ -454,9 +424,7 @@ class MainMenuState extends MusicBeatState
 						case 'story_mode':
 							MusicBeatState.switchState(new StoryMenuState());
 						case 'freeplay':
-							MusicBeatState.switchState(new FreeplayState());	
-						case 'mods':
-							MusicBeatState.switchState(new ModsMenuState());									
+							MusicBeatState.switchState(new FreeplayState());										
 						case 'options':						    
 							MusicBeatState.switchState(new options.OptionsState());
 						case 'credits':
