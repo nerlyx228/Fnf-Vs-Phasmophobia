@@ -19,9 +19,6 @@ import openfl.Lib;
 
 class MainMenuState extends MusicBeatState
 {
-
-	//version txt ist lines
-	public static var phasmophobiaVersion:String = '0.1';
 	public static var psychEngineVersion:String = '0.7.1'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
@@ -155,58 +152,79 @@ class MainMenuState extends MusicBeatState
 		}*/
 
 		for (i in 0...optionShit.length)
-		{
-			var offset:Float = 130 - (Math.max(optionShit.length, 4) - 4) * 80;
-			var menuItem:FlxSprite = new FlxSprite(-1950, (i * 135)  + offset);
-			menuItem.scale.x = scale;
-			menuItem.scale.y = scale;
-			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
-			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
-			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
-			menuItem.animation.play('idle');
-			menuItem.ID = i;
-			
-			//menuItem.x = menuItem.x - menuItem.width;
-			
-			//menuItem.screenCenter(X);
-			//menuItem.centerOrigin();
-			menuItems.add(menuItem);
-			var scr:Float = (optionShit.length - 4) * 0.135;
-			if(optionShit.length < 6) scr = 0;
-			menuItem.scrollFactor.set(0, scr);
-			menuItem.antialiasing = ClientPrefs.data.antialiasing;
-			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
-			menuItem.updateHitbox();
-			//menuItem.offset.x = menuItem.offset.x * 0.8;
-			//menuItem.offset.y = menuItem.offset.y * 0.8;
-			
-			if (menuItem.ID == curSelected){
-			menuItem.animation.play('selected');
-			menuItem.updateHitbox();
-			//menuItem.centerOffsets();
-			//menuItem.offset.x = menuItem.offset.x * 0.8;
-			//menuItem.offset.y = menuItem.offset.y * 0.8 + menuItem.width / 2;
-			}
-			/*
-			FlxTween.tween(menuItem, {x: 100}, (0.5 + 0.06 * i), {
-			    ease: FlxEase.quadOut,
-			    type: ONESHOT,
-				onComplete: function(twn:FlxTween)
-				    {
+ // Story Mode
+        var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
+        var menuItem:FlxSprite = new FlxSprite(100, 100);
+        menuItem.scale.x = scale * 2;
+        menuItem.scale.y = scale * 2;
+        menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[0]);
+        menuItem.animation.addByPrefix('idle', optionShit[0] + " basic", 24);
+        menuItem.animation.addByPrefix('selected', optionShit[0] + " white", 24);
+        menuItem.animation.play('idle');
+        menuItem.ID = 0;
+        menuItem.setGraphicSize(Std.int(menuItem.width * 0.70));
+        menuItems.add(menuItem);
+        var scr:Float = (optionShit.length - 4) * 0.135;
+        if (optionShit.length < 6) scr = 0;
+        menuItem.scrollFactor.set(0, scr);
+        //menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+        menuItem.updateHitbox();
 
-				    }
-				});                             
-				*/      
-		}
-		
-		for (i in 0...optionShit.length)
-		also find	
-		{
-			var option:FlxSprite = menuItems.members[i];
-				optionTween[i] = FlxTween.tween(option, {x: 100}, 0.7 + 0.08 * i , {
-					ease: FlxEase.backInOut
-			    });
-		}
+        // FreePlay Mode
+        offset = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
+        menuItem = new FlxSprite(100, 250);
+        menuItem.scale.x = scale * 2;
+        menuItem.scale.y = scale * 2;
+        menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[1]);
+        menuItem.animation.addByPrefix('idle', optionShit[1] + " basic", 24);
+        menuItem.animation.addByPrefix('selected', optionShit[1] + " white", 24);
+        menuItem.animation.play('idle');
+        menuItem.ID = 1;
+        menuItem.setGraphicSize(Std.int(menuItem.width * 0.70));
+        menuItems.add(menuItem);
+        scr = (optionShit.length - 4) * 0.135;
+        if (optionShit.length < 6) scr = 1;
+        menuItem.scrollFactor.set(1, scr);
+        //menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+        menuItem.updateHitbox();
+
+        // Credits
+        offset = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
+        menuItem = new FlxSprite(100, 400);
+        menuItem.scale.x = scale * 2;
+        menuItem.scale.y = scale * 2;
+        menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[2]);
+        menuItem.animation.addByPrefix('idle', optionShit[2] + " basic", 24);
+        menuItem.animation.addByPrefix('selected', optionShit[2] + " white", 24);
+        menuItem.animation.play('idle');
+        menuItem.ID = 2;
+        menuItem.setGraphicSize(Std.int(menuItem.width * 0.70));
+        menuItems.add(menuItem);
+        scr = (optionShit.length - 4) * 0.135;
+        if (optionShit.length < 6) scr = 2;
+        menuItem.scrollFactor.set(2, scr);
+        //menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+        menuItem.updateHitbox();
+
+        // Options
+        offset = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
+        menuItem = new FlxSprite(100, 550);
+        menuItem.scale.x = scale * 2;
+        menuItem.scale.y = scale * 2;
+        menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[3]);
+        menuItem.animation.addByPrefix('idle', optionShit[3] + " basic", 24);
+        menuItem.animation.addByPrefix('selected', optionShit[3] + " white", 24);
+        menuItem.animation.play('idle');
+        menuItem.ID = 3;
+        menuItem.setGraphicSize(Std.int(menuItem.width * 0.70));
+        menuItems.add(menuItem);
+        scr = (optionShit.length - 4) * 0.135;
+        if (optionShit.length < 6) scr = 3;
+        menuItem.scrollFactor.set(3, scr);
+        //menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+        menuItem.updateHitbox();
+
+
     // GF CODE!
         gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
         gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
@@ -217,22 +235,21 @@ class MainMenuState extends MusicBeatState
             danceLeft = !danceLeft;
             if (danceLeft) gfDance.animation.play('danceLeft');
         }
-
-
-
-
 		
+		for (i in 0...optionShit.length)
+		also find	
+		{
+			var option:FlxSprite = menuItems.members[i];
+				optionTween[i] = FlxTween.tween(option, {x: 100}, 0.7 + 0.08 * i , {
+					ease: FlxEase.backInOut
+			    });
+		}
+	
 //find this and cancel it out with slashes
 		//FlxG.camera.follow(camFollow, null, 0);
 
-
 	
                 //version shit
-		var versionShit:FlxText = new FlxText(12, FlxG.height - 60, 0, "nodname" + '1.1.0' + ' phasmophobiaVersion', 12);
-		versionShit.scrollFactor.set();
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		versionShit.antialiasing = ClientPrefs.data.antialiasing;
-		add(versionShit);
 		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "NF Engine v" + '1.1.0' + ' (PSYCH v0.7.1h)', 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
