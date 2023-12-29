@@ -144,7 +144,8 @@ class MainMenuState extends MusicBeatState
 		}*/
 
 		for (i in 0...optionShit.length)
-			
+
+		{
  // Story Mode
         var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
         var menuItem:FlxSprite = new FlxSprite(100, 100);
@@ -216,7 +217,8 @@ class MainMenuState extends MusicBeatState
         menuItem.scrollFactor.set(3, scr);
         //menuItem.antialiasing = ClientPrefs.globalAntialiasing;
         menuItem.updateHitbox();
-		
+		}
+			
 		for (i in 0...optionShit.length)
 		{
 			var option:FlxSprite = menuItems.members[i];
