@@ -19,6 +19,9 @@ import openfl.Lib;
 
 class MainMenuState extends MusicBeatState
 {
+
+	//version txt ist lines
+	public static var phasmophobiaVersion:String = '0.1';
 	public static var psychEngineVersion:String = '0.7.1'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
@@ -39,7 +42,7 @@ class MainMenuState extends MusicBeatState
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
-	
+
 	var SoundTime:Float = 0;
 	var BeatTime:Float = 0;
 	
@@ -53,6 +56,14 @@ class MainMenuState extends MusicBeatState
 		0xFFFF0000
 	                                
 	    ];
+
+
+
+
+     var gfDance:FlxSprite; // to put the gf on the menu mme
+     var danceLeft:Bool = false;
+
+	
 	public static var currentColor:Int = 1;    
 	public static var currentColorAgain:Int = 0;
 			
@@ -189,15 +200,39 @@ class MainMenuState extends MusicBeatState
 		}
 		
 		for (i in 0...optionShit.length)
+		also find	
 		{
 			var option:FlxSprite = menuItems.members[i];
 				optionTween[i] = FlxTween.tween(option, {x: 100}, 0.7 + 0.08 * i , {
 					ease: FlxEase.backInOut
 			    });
 		}
+    // GF CODE!
+        gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
+        gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
+        gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, true);
+        add(gfDance);
+        gfDance.setGraphicSize(750, 700);
+        if (gfDance != null) {
+            danceLeft = !danceLeft;
+            if (danceLeft) gfDance.animation.play('danceLeft');
+        }
 
-		FlxG.camera.follow(camFollow, null, 0);
 
+
+
+		
+//find this and cancel it out with slashes
+		//FlxG.camera.follow(camFollow, null, 0);
+
+
+	
+                //version shit
+		var versionShit:FlxText = new FlxText(12, FlxG.height - 60, 0, "nodname" + '1.1.0' + ' phasmophobiaVersion', 12);
+		versionShit.scrollFactor.set();
+		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		versionShit.antialiasing = ClientPrefs.data.antialiasing;
+		add(versionShit);
 		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "NF Engine v" + '1.1.0' + ' (PSYCH v0.7.1h)', 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -209,7 +244,7 @@ class MainMenuState extends MusicBeatState
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
 		versionShit.antialiasing = ClientPrefs.data.antialiasing;
-        versionShit.cameras = [camHUD];
+                versionShit.cameras = [camHUD];
 		// NG.core.calls.event.logEvent('swag').send();
 
 		
