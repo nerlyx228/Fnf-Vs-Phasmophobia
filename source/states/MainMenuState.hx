@@ -76,12 +76,9 @@ class MainMenuState extends MusicBeatState
 
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
-		camAchievement = new FlxCamera();
-		camAchievement.bgColor.alpha = 0;
 		camHUD.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
-		FlxG.cameras.add(camAchievement, false);
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camHUD;
@@ -207,7 +204,6 @@ class MainMenuState extends MusicBeatState
 
 			}
 		}
-		#end
 		
 		#if !android
 		FlxG.mouse.visible = true;
