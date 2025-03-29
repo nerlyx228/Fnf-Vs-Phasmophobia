@@ -11,6 +11,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepad;
 import tjson.TJSON as Json;
+import lime.system.System;
 
 import openfl.Assets;
 import openfl.Lib;
@@ -93,13 +94,33 @@ class TitleState extends MusicBeatState
     
 	override public function create():Void
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
+		if(checkOpenFirst){
+    		Paths.clearStoredMemory();
+    		Paths.clearUnusedMemory();
+		}
+		
 		Lib.application.window.title = " NF - Engine - Title";
 		
 		//https://github.com/beihu235/AndroidDialogs
 		
 		#if android
+		/*
+		if (lime.app.Application.current.meta.get('title') != "Friday Night Funkin' NF Engine"
+		 || lime.app.Application.current.meta.get("packageName") != "com.NFengine"
+		 || lime.app.Application.current.meta.get("package") != "com.NFengine"
+		 || lime.app.Application.current.meta.get("version") != '1.1.0'
+		){
+		    
+		    //Sys.exit(1);		
+		   // return;
+		}
+		if (DeviceLanguage.getLang() == 'zh') 
+    		lang = '检测到引擎被修改，请使用官方版本' + System.platformVersion;
+    		else
+    		lang = 'The engine has been modified. Please use the official version';
+		    
+		    AndroidDialogsExtend.OpenToast(lang,2);
+		*/
 		if (DeviceLanguage.getLang() == 'zh') 
 		lang = '欢迎使用NF引擎\n版本: 1.1.0';
 		else

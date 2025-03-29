@@ -43,6 +43,8 @@ class Note extends FlxSprite
 	public var ignoreNote:Bool = false;
 	public var hitByOpponent:Bool = false;
 	public var noteWasHit:Bool = false;
+	public var isEndNote:Bool = false; // for better playAnim
+	public var susCanPress:Bool = true; // for better note check
 	public var prevNote:Note;
 	public var nextNote:Note;
 
@@ -220,7 +222,7 @@ class Note extends FlxSprite
 		if(noteData > -1) {
 			texture = '';
 			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
-			if(PlayState.SONG != null && (PlayState.SONG.disableNoteRGB || ClientPrefs.data.disableNoteRGB)) rgbShader.enabled = false;
+			if(PlayState.SONG != null && (PlayState.SONG.disableNoteRGB || !ClientPrefs.data.noteRGB)) rgbShader.enabled = false;
 
 			x += swagWidth * (noteData);
 			if(!isSustainNote && noteData < colArray.length) { //Doing this 'if' check to fix the warnings on Senpai songs
@@ -241,9 +243,12 @@ class Note extends FlxSprite
 			multAlpha = 0.6;
 			hitsoundDisabled = true;
 			if(ClientPrefs.data.downScroll) flipY = true;
+			if(ClientPrefs.data.guitarHeroSustains) susCanPress = false; 
 			
 			earlyHitMult = 0.5;
-
+            noAnimation = true; //better work for play anim
+            isEndNote = true;
+            
 			offsetX += width / 2;
 			copyAngle = false;
 
@@ -270,6 +275,8 @@ class Note extends FlxSprite
 				prevNote.updateHitbox();
 				
 				prevNote.earlyHitMult = 0;
+				prevNote.noAnimation = false;
+				prevNote.isEndNote = false;
 			}
 			if(PlayState.isPixelStage)
 			{
@@ -483,9 +490,9 @@ class Note extends FlxSprite
 					    y -= PlayState.daPixelZoom * 9.5;
 				    }
 				    y -= (frameHeight * scale.y) - (Note.swagWidth / 2);
-				   // y += ((frameHeight * scale.y)/* - (Note.swagWidth / 2)*/) * angleReturn(strumDirection);
+				    //y += ((frameHeight * scale.y) - (Note.swagWidth / 2)) * angleReturn(strumDirection);
 			    }else{
-			      //  y -= ((frameHeight * scale.y) /*- (Note.swagWidth / 2)*/) * angleReturn(strumDirection);
+			       // y -= ((frameHeight * scale.y) - (Note.swagWidth / 2)) * angleReturn(strumDirection);
 			    }
 			}
 		}
@@ -520,13 +527,17 @@ class Note extends FlxSprite
 	}
 	
     function angleReturn(angle:Float):Float{ //let's go!!!
-        var result:Float = resetAngle(angle);
+        var result:Float = resetAngle(angle); //angle will change data to 0-1
+        result = (Math.cos(Math.PI * (result + 90) / 180) + 1) / 2;
+        
+        /*
         if (result <= 90) result = Math.cos(result / 180 * Math.PI); //cos(x)
         else result = Math.sin( ((result - 90) / 27 * 15) / 180 * Math.PI); //uhhhh idk how to write
+        */
         return result;
     }
     
-    function resetAngle(angle:Float):Float{
+    function resetAngle(angle:Float):Float{ //make angle to 0 to 360
         if (angle >= 0)
         return angle - 360 * Math.floor(angle / 360);
         

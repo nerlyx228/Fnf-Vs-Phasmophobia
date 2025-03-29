@@ -29,8 +29,7 @@ class SaveVariables {
 	public var memoryType:Int = 3;
 	public var guitarHeroSustains:Bool = true;
 	public var skipTitleVideo:Bool = false;
-	
-	
+		
 	public var flashing:Bool = true;
 	public var ResultsScreen:Bool = true;
 	public var autoPause:Bool = true;
@@ -38,14 +37,16 @@ class SaveVariables {
 	
 	public var noteSkin:String = 'Default';
 	public var splashSkin:String = 'Psych';
-	public var disableNoteRGB:Bool = false;
-	public var disableSplashRGB:Bool = false;
+	public var noteRGB:Bool = true;
+	public var splashRGB:Bool = true;
+	public var showSplash:Bool = true;
 	public var splashAlpha:Float = 0.6;
 	
 	public var lowQuality:Bool = false;
 	public var shaders:Bool = true;
 	public var colorblindMode:Int = 0;
 	public var cacheOnGPU:Bool = #if !switch false #else true #end; //From Stilic	
+	public var imagePersist:Bool = false;
 	public var framerate:Int = 60;
 	
 	public var CustomFade:String = 'Move';
@@ -214,8 +215,7 @@ class ClientPrefs {
 			//trace('saved variable: $key');
 			Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
 		}
-		FlxG.save.data.achievementsMap = Achievements.achievementsMap;
-		FlxG.save.data.henchmenDeath = Achievements.henchmenDeath;
+		#if ACHIEVEMENTS_ALLOWED Achievements.save(); #end
 		FlxG.save.flush();
 
 		//Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
@@ -230,7 +230,7 @@ class ClientPrefs {
 	public static function loadPrefs() {
 		if(data == null) data = new SaveVariables();
 		if(defaultData == null) defaultData = new SaveVariables();
-
+        #if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
 		for (key in Reflect.fields(data)) {
 			if (key != 'gameplaySettings' && Reflect.hasField(FlxG.save.data, key)) {
 				//trace('loaded variable: $key');

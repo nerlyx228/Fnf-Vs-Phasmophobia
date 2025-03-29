@@ -1,11 +1,8 @@
 package backend;
 
-import animateatlas.AtlasFrameMaker;
-
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 
 import openfl.display.BitmapData;
@@ -18,16 +15,19 @@ import openfl.geom.Rectangle;
 import lime.utils.Assets;
 import flash.media.Sound;
 
+import haxe.Json;
+
 #if sys
 import sys.io.File;
 import sys.FileSystem;
 #end
-import tjson.TJSON as Json;
+
 import haxe.io.Bytes;
 
 #if MODS_ALLOWED
 import backend.Mods;
 #end
+
 
 class Paths
 {
@@ -47,6 +47,7 @@ class Paths
 	];
 	/// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory() {
+	    if (ClientPrefs.data.imagePersist) return;
 		// clear non local assets in the tracked assets list
 		for (key in currentTrackedAssets.keys()) {
 			// if it is not currently contained within the used local assets
@@ -69,12 +70,14 @@ class Paths
 
 		// run the garbage collector for good measure lmfao
 		System.gc();
+		
 	}
 
 
 	// define the locally tracked assets
 	public static var localTrackedAssets:Array<String> = [];
 	public static function clearStoredMemory(?cleanUnused:Bool = false) {
+	    if (ClientPrefs.data.imagePersist) return;
 		// clear anything not in the tracked assets list
 		@:privateAccess
 		for (key in FlxG.bitmap._cache.keys())
@@ -99,6 +102,8 @@ class Paths
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
 		#if !html5 openfl.Assets.cache.clear("songs"); #end
+		
+		
 	}
 
 	static public var currentLevel:String;
@@ -383,6 +388,76 @@ class Paths
 		return false;
 	}
 	
+	#if flxanimate
+	public static function loadAnimateAtlas(spr:FlxAnimate, folderOrImg:Dynamic, spriteJson:Dynamic = null, animationJson:Dynamic = null)
+	{
+		var changedAnimJson = false;
+		var changedAtlasJson = false;
+		var changedImage = false;
+		
+		if(spriteJson != null)
+		{
+			changedAtlasJson = true;
+			spriteJson = File.getContent(spriteJson);
+		}
+
+		if(animationJson != null) 
+		{
+			changedAnimJson = true;
+			animationJson = File.getContent(animationJson);
+		}
+
+		// is folder or image path
+		if(Std.isOfType(folderOrImg, String))
+		{
+			var originalPath:String = folderOrImg;
+			for (i in 0...10)
+			{
+				var st:String = '$i';
+				if(i == 0) st = '';
+
+				if(!changedAtlasJson)
+				{
+					spriteJson = getTextFromFile('images/$originalPath/spritemap$st.json');
+					if(spriteJson != null)
+					{
+						//trace('found Sprite Json');
+						changedImage = true;
+						changedAtlasJson = true;
+						folderOrImg = Paths.image('$originalPath/spritemap$st');
+						break;
+					}
+				}
+				else if(Paths.fileExists('images/$originalPath/spritemap$st.png', IMAGE))
+				{
+					//trace('found Sprite PNG');
+					changedImage = true;
+					folderOrImg = Paths.image('$originalPath/spritemap$st');
+					break;
+				}
+			}
+
+			if(!changedImage)
+			{
+				//trace('Changing folderOrImg to FlxGraphic');
+				changedImage = true;
+				folderOrImg = Paths.image(originalPath);
+			}
+
+			if(!changedAnimJson)
+			{
+				//trace('found Animation Json');
+				changedAnimJson = true;
+				animationJson = getTextFromFile('images/$originalPath/Animation.json');
+			}
+		}
+
+		//trace(folderOrImg);
+		//trace(spriteJson);
+		//trace(animationJson);
+		spr.loadAtlasEx(folderOrImg, spriteJson, animationJson);
+	}
+	#end
 	 // less optimized but automatic handling
 	static public function getAtlas(key:String, ?library:String = null):FlxAtlasFrames
 	{

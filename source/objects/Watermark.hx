@@ -30,11 +30,8 @@ class Watermark extends Bitmap
 
 		this.x = x;
 		this.y = y;
-        this.alpha = Alpha;
-        
-        
+        this.alpha = Alpha;        
     }
-
 } 
 
 
@@ -84,7 +81,7 @@ class FPS extends TextField
 	
 	
 	public static var currentColor = 0;    
-	 var skippedFrames = 0;
+	 var skippedFrames:Float = 0;
 	 
      var logicFPSnum = 0;
 	
@@ -115,10 +112,13 @@ class FPS extends TextField
         }
         
         if (currentFPS > ClientPrefs.data.framerate) currentFPS = ClientPrefs.data.framerate;
+        
+        
+        var changeNum:Int = 20;  //change color num for 1s
 		
 		if (ClientPrefs.data.rainbowFPS)
 	    {
-	        if (skippedFrames >= 6)
+	        if (skippedFrames >= 1000 / changeNum)
 		    {
 		    	if (currentColor >= ColorArray.length)
     				currentColor = 0;
@@ -128,7 +128,7 @@ class FPS extends TextField
     		}
     		else
     		{
-    			skippedFrames++;	
+    			skippedFrames += deltaTime;
     		}
 		}
 		else
